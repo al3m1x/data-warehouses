@@ -1,0 +1,103 @@
+﻿<DeploymentSnapshot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0">
+  <Target>
+    <Database>HD_DrivingSchool</Database>
+    <Server>ASUS\HD_ANALYSIS</Server>
+    <ConnectionString>Data Source=ASUS\HD_ANALYSIS;Timeout=0</ConnectionString>
+  </Target>
+  <Options>
+    <TransactionalDeployment>false</TransactionalDeployment>
+    <PartitionDeployment>DeployPartitions</PartitionDeployment>
+    <RoleDeployment>DeployRolesRetainMembers</RoleDeployment>
+    <ProcessingOption>DoNotProcess</ProcessingOption>
+    <OutputScript></OutputScript>
+    <ImpactAnalysisFile></ImpactAnalysisFile>
+    <ConfigurationSettingsDeployment>Deploy</ConfigurationSettingsDeployment>
+    <OptimizationSettingsDeployment>Deploy</OptimizationSettingsDeployment>
+    <WriteBackTableCreation>UseExisting</WriteBackTableCreation>
+  </Options>
+  <Snapshot>
+    <ObjectSnapshots>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.RelationalDataSource</Type>
+        <TimeStamp>ixvzUiwHc9fBW6tpvahNIuJt1/I=09.12.2024 01:29:1226.11.2024 01:33:16</TimeStamp>
+        <ID>
+          <String>HD Driving School</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.DataSourceView</Type>
+        <TimeStamp>fFt0AuMw1DuydZBiP0nO5PP0zqY=09.12.2024 01:01:4426.11.2024 01:33:16</TimeStamp>
+        <ID>
+          <String>HD Driving School</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>MjcmPDwAgzcWqtQucv10A0Esa3A=09.12.2024 01:01:4426.11.2024 01:33:16</TimeStamp>
+        <ID>
+          <String>Instructor</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>Licj5MnPcrKJ1kvK1ZjEJM64dzs=15.12.2024 15:01:1526.11.2024 01:33:16</TimeStamp>
+        <ID>
+          <String>Date</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>ASzYwJ4NJdgbpRdC/Noo1rR+ZbQ=09.12.2024 01:02:0726.11.2024 01:33:16</TimeStamp>
+        <ID>
+          <String>Student</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>tF4SWw/VtYogWCd3tUGUJ4y/A8U=09.12.2024 01:02:3126.11.2024 01:33:16</TimeStamp>
+        <ID>
+          <String>Course</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>VamSIlAxl3297s5sUHAmu/GO3hc=25.11.2024 14:22:4926.11.2024 01:33:16</TimeStamp>
+        <ID>
+          <String>Time</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>UtLKSadUmIKspgB4xBlrLO2MPlY=25.11.2024 14:09:1926.11.2024 01:33:16</TimeStamp>
+        <ID>
+          <String>Junk</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>3t/t9JtZnfz5JzB+MOw4CXJ4ZuU=25.11.2024 14:09:1926.11.2024 01:33:16</TimeStamp>
+        <ID>
+          <String>Exam</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Cube</Type>
+        <TimeStamp>PH7lRnqaimuLrWHEk51NcHjYwMg=16.12.2024 22:00:1826.11.2024 01:33:16a+YMmDsZyaRnkl8hqMm+ppYd15Y=25.11.2024 22:58:1526.11.2024 01:33:16</TimeStamp>
+        <ID>
+          <String>HD Driving School</String>
+        </ID>
+      </ObjectSnapshot>
+    </ObjectSnapshots>
+    <DatabaseSnapshot>
+      <Type>Microsoft.AnalysisServices.Database</Type>
+      <TimeStamp>oljeR+wyqNyBC4SYOQjDS8E/C44=25.11.2024 13:54:3226.11.2024 01:33:16</TimeStamp>
+      <ID>
+        <String>HD_DrivingSchool</String>
+      </ID>
+    </DatabaseSnapshot>
+    <Granularity>Coarse</Granularity>
+  </Snapshot>
+  <AssemblyLocations />
+  <ProcessingComplete>true</ProcessingComplete>
+  <LastDeployed>2024-12-16T21:00:29.3Z</LastDeployed>
+</DeploymentSnapshot>

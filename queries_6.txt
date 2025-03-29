@@ -1,0 +1,325 @@
+1/1. Porównanie procenta zdawalności egzaminów kursantów określonych instruktorów z obecnego i zeszłego miesiąca
+(Numerical Operation)
+
+
+
+WITH 
+    MEMBER [Measures].[Passed Exam Count] AS 
+        SUM(
+            FILTER(
+                [Junk].[Is Passed].[Is Passed].Members, 
+                [Junk].[Is Passed].CurrentMember.Properties("Caption") = "True"
+            ),
+            [Measures].[Exam Take Count]
+        )
+
+    MEMBER [Measures].[Total Exam Count] AS 
+        [Measures].[Exam Take Count]
+
+    MEMBER [Measures].[Pass Rate] AS 
+        IIF(
+            [Measures].[Total Exam Count] > 0, 
+            ([Measures].[Passed Exam Count] / [Measures].[Total Exam Count]) * 100, 
+            NULL
+        )
+
+SELECT 
+    NON EMPTY 
+        { 
+            [Measures].[Passed Exam Count],
+            [Measures].[Total Exam Count],
+            [Measures].[Pass Rate]
+        } ON COLUMNS,
+
+    NON EMPTY 
+        CROSSJOIN(
+            [Instructor].[Name].[Name].ALLMEMBERS,
+            [Instructor].[Surname].[Surname].ALLMEMBERS,
+            [Date].[Year].[Year].ALLMEMBERS,
+            [Date].[Month].[Month].ALLMEMBERS
+        ) 
+    DIMENSION PROPERTIES 
+        MEMBER_CAPTION, 
+        MEMBER_UNIQUE_NAME 
+    ON ROWS
+
+FROM 
+    [HD Driving School]
+WHERE 
+    ([Junk].[Is Passed])
+CELL PROPERTIES 
+    VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+
+2/2. Porównanie liczby kursantów, którzy zdają egzamin danej kategorii po raz wtóry z obecnego i zeszłego miesiąca
+
+WITH 
+    MEMBER [Measures].[Retake Count] AS 
+        SUM(
+            FILTER(
+                [Student].[ID Student].[ID Student].ALLMEMBERS, 
+                [Measures].[Exam Take Count] > 1
+            ),
+            [Measures].[Exam Take Count]
+        )
+
+    MEMBER [Measures].[Retake Count Previous Month] AS 
+        (
+            ParallelPeriod(
+                [Date].[DateHierarchy].[Month], 1, [Date].[DateHierarchy].CurrentMember
+            ),
+            [Measures].[Retake Count]
+        )
+
+SELECT 
+    NON EMPTY 
+        { 
+            [Measures].[Retake Count], 
+            [Measures].[Retake Count Previous Month]
+        } ON COLUMNS,
+    
+    NON EMPTY 
+        CROSSJOIN(
+            [Date].[Year].[Year].ALLMEMBERS,
+            [Date].[Month].[Month].ALLMEMBERS
+        ) 
+    DIMENSION PROPERTIES 
+        MEMBER_CAPTION, 
+        MEMBER_UNIQUE_NAME 
+    ON ROWS
+
+FROM 
+    [HD Driving School]
+
+CELL PROPERTIES 
+    VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+3/7. Czy zauważalna jest tendencja, w której w danym miesiącu corocznie notowane są gorsze wyniki egzaminów?
+
+
+WITH 
+    MEMBER [Measures].[Passed Exam Count] AS 
+        SUM(
+            FILTER(
+                [Junk].[Is Passed].[Is Passed].MEMBERS, 
+                [Junk].[Is Passed].CurrentMember.Properties("Caption") = "True"
+            ),
+            [Measures].[Exam Take Count]
+        )
+
+    MEMBER [Measures].[Total Exam Count] AS 
+        [Measures].[Exam Take Count]
+
+    MEMBER [Measures].[Pass Rate] AS 
+        IIF(
+            [Measures].[Total Exam Count] > 0, 
+            ([Measures].[Passed Exam Count] / [Measures].[Total Exam Count]) * 100, 
+            NULL
+        )
+
+SELECT 
+    NON EMPTY 
+        { 
+            [Measures].[Passed Exam Count],
+            [Measures].[Total Exam Count],
+            [Measures].[Pass Rate]
+        } ON COLUMNS,
+
+    NON EMPTY 
+        [Date].[Month].[Month].MEMBERS ON ROWS
+
+FROM 
+    [HD Driving School]
+
+WHERE 
+    ([Junk].[Is Passed])
+
+CELL PROPERTIES 
+    VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+
+
+
+
+4/11. Porównanie liczby kursantów z obecnego i zeszłego miesiąca
+
+WITH 
+    MEMBER [Measures].[Current Month Students] AS 
+            [Measures].[Number of students having lessons]
+
+    MEMBER [Measures].[Previous Month Students] AS 
+        (
+            ParallelPeriod(
+                [Date].[DateHierarchy].[Month], 
+                1, 
+                [Date].[DateHierarchy].CurrentMember
+            ),
+            [Measures].[Current Month Students]
+        )
+
+SELECT 
+    NON EMPTY 
+        { 
+            [Measures].[Current Month Students], 
+            [Measures].[Previous Month Students]
+        } ON COLUMNS,
+
+    NON EMPTY 
+        [Date].[DateHierarchy].[Month].MEMBERS 
+    DIMENSION PROPERTIES 
+        MEMBER_CAPTION, MEMBER_UNIQUE_NAME 
+    ON ROWS
+
+FROM 
+    [HD Driving School]
+
+CELL PROPERTIES 
+    VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+
+5/12. Porównanie zmiany liczby kursantów ze zmianą zdawalności egzaminów
+
+
+WITH 
+    MEMBER [Measures].[Passed Exam Count] AS 
+        SUM(
+            FILTER(
+                [Junk].[Is Passed].[Is Passed].MEMBERS, 
+                [Junk].[Is Passed].CurrentMember.Properties("Caption") = "True"
+            ),
+            [Measures].[Exam Take Count]
+        )
+
+    MEMBER [Measures].[Total Exam Count] AS 
+        [Measures].[Exam Take Count]
+
+    MEMBER [Measures].[Pass Rate] AS 
+        IIF(
+            [Measures].[Total Exam Count] > 0, 
+            ([Measures].[Passed Exam Count] / [Measures].[Total Exam Count]) * 100, 
+            NULL
+        )
+
+    MEMBER [Measures].[Current Month Students] AS 
+            [Measures].[Number of students having lessons]
+
+SELECT 
+    NON EMPTY 
+        { 
+            [Measures].[Passed Exam Count],
+            [Measures].[Total Exam Count],
+            [Measures].[Pass Rate],
+            [Measures].[Current Month Students]
+        } ON COLUMNS,
+
+    NON EMPTY 
+        CROSSJOIN(
+            [Date].[Year].[Year].MEMBERS,
+            [Date].[Month].[Month].MEMBERS
+        ) ON ROWS
+
+FROM 
+    [HD Driving School]
+
+WHERE 
+    ([Junk].[Is Passed])
+
+CELL PROPERTIES 
+    VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+
+
+6/13. Ilu ze wszystkich kursantów, którzy zakończyli naukę w szkole “XYZ”, zdało egzaminy za pierwszym razem?
+
+WITH 
+MEMBER [Measures].[StudentsTakingExam] AS
+    COUNT(
+        FILTER(
+            [Student].[ID Student].[ID Student].MEMBERS, 
+            ([Measures].[Number of students taking exam], [Is Passed].[True]) > 0
+        )
+    )
+MEMBER [Measures].[StudentCount_Failed] AS
+    COUNT(
+        FILTER(
+            [Student].[ID Student].[ID Student].MEMBERS, 
+            ([Measures].[Number of students taking exam], [Is Passed].[False]) > 0
+        )
+    )
+MEMBER [Measures].[StudentsPassingAtFirstTry] AS
+    [Measures].[StudentsTakingExam] - [Measures].[StudentCount_Failed]
+
+SELECT 
+    { 
+        [Measures].[StudentsTakingExam],
+        [Measures].[StudentsPassingAtFirstTry]
+    } ON COLUMNS
+FROM [HD Driving School]
+CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+
+
+
+
+7/14. Jaki jest związek między ilością kursantów a porą roku?
+
+SELECT NON EMPTY { [Measures].[Number of students having lessons] } ON COLUMNS, NON EMPTY { ([Date].[Season].[Season].ALLMEMBERS ) } DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_UNIQUE_NAME ON ROWS FROM [HD Driving School] CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+
+
+
+
+8/16. Czy cena za kurs zmieniła się względem poprzedniego miesiąca?
+
+SELECT NON EMPTY { [Measures].[Average_course_price] } ON COLUMNS, NON EMPTY { ([Date].[Year].[Year].ALLMEMBERS * [Date].[Month].[Month].ALLMEMBERS * [Course].[Category].[Category].ALLMEMBERS ) } DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_UNIQUE_NAME ON ROWS FROM [HD Driving School] CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+
+
+9/17. Porównanie zysku szkoły jazdy z tego i poprzedniego miesiąca
+
+SELECT NON EMPTY { [Measures].[LessonProfit], [Measures].[LessonPrice] } ON COLUMNS, NON EMPTY { ([Date].[Year].[Year].ALLMEMBERS * [Date].[Month].[Month].ALLMEMBERS ) } DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_UNIQUE_NAME ON ROWS FROM [HD Driving School] CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+10/X. Ile minut przejeżdżono ogólnie w danej porze dnia
+
+
+SELECT NON EMPTY { [Measures].[Minutes Of Driving Lesson] } ON COLUMNS, NON EMPTY { ([Time].[Time Of Day].[Time Of Day].ALLMEMBERS ) } DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_UNIQUE_NAME ON ROWS FROM [HD Driving School] CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+
+11/X. Liczba podejść do egzaminów najgorszych stu studentów (TOPCOUNT)
+
+
+SELECT NON EMPTY 
+    { [Measures].[Exam Take Count] } ON COLUMNS, 
+NON EMPTY 
+    TOPCOUNT(
+        ( 
+            [Student].[Age Category].[Age Category].ALLMEMBERS 
+            * [Student].[ID Student].[ID Student].ALLMEMBERS 
+            * [Student].[Name].[Name].ALLMEMBERS 
+            * [Student].[Surname].[Surname].ALLMEMBERS
+            * [Student].[PESEL Student].[PESEL Student].ALLMEMBERS 
+        ),
+        100,
+        [Measures].[Exam Take Count]
+    ) 
+DIMENSION PROPERTIES 
+    MEMBER_CAPTION, MEMBER_UNIQUE_NAME 
+ON ROWS 
+FROM [HD Driving School]
+CELL PROPERTIES 
+    VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+
+
+12/X. Ile lekcji przeprowadzili instruktorzy o danej kategorii wiekowej?
+
+SELECT NON EMPTY { [Measures].[Driving Lesson Count] } ON COLUMNS, NON EMPTY { ([Instructor].[Age Category].[Age Category].ALLMEMBERS ) } DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_UNIQUE_NAME ON ROWS FROM [HD Driving School] CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+
+
+13/X. Przypisanie liczby podejść do egzaminów w danych latach
+
+SELECT NON EMPTY { [Measures].[Exam Take Count] } ON COLUMNS, NON EMPTY { ([Date].[Year].[Year].ALLMEMBERS ) } DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_UNIQUE_NAME ON ROWS FROM [HD Driving School] CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS
+
+
+
